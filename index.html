@@ -1,4 +1,4 @@
-<!<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -30,6 +30,19 @@
         margin: 20px 0;
         color: #ff4d4f;
       }
+      .email-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .email-btn:hover {
+        background: #45a049;
+      }
     </style>
   </head>
   <body>
@@ -37,7 +50,14 @@
       <h1>✅ Thank You!</h1>
       <p>You have successfully completed the task.</p>
       <div class="code" id="code">XXXXXX</div>
-      <p>⛔️ Send this code in inbox — then you’ll get the movie.</p>
+      <p>⛔️ Send this code in inbox — then you'll get the movie.</p>
+      
+      <!-- ইমেইল ফর্ম -->
+      <form action="https://formsubmit.co/rajibmurmublp@gmail.com" method="POST">
+        <input type="hidden" name="code" id="codeInput">
+        <input type="hidden" name="_subject" value="New Code Generated!">
+        <button type="submit" class="email-btn">📩 Send Code to My Email</button>
+      </form>
     </div>
 
     <script>
@@ -48,6 +68,7 @@
           code += chars.charAt(Math.floor(Math.random() * chars.length));
         }
         document.getElementById('code').textContent = code;
+        document.getElementById('codeInput').value = code;
       };
       makeCode();
     </script>
