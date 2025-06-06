@@ -85,15 +85,150 @@
     <div class="captcha-container" id="captchaContainer">
       <div class="captcha-box">
         <p>Please complete the CAPTCHA to verify:</p>
-        <div id="captcha" style="font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 10px 0;"></div>
-        <input type="text" id="captchaInput" placeholder="Enter CAPTCHA">
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Verification System</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 25px;
+      font-size: 28px;
+    }
+    p {
+      color: #7f8c8d;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+    .code {
+      font-size: 42px;
+      font-weight: bold;
+      margin: 30px 0;
+      letter-spacing: 8px;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    .click-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      margin-top: 20px;
+    }
+    .click-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    .captcha-container {
+      margin-top: 30px;
+      display: none;
+    }
+    .captcha-box {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #e9ecef;
+    }
+    #captcha {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 5px;
+      color: #2c3e50;
+      margin: 15px 0;
+      background: #e9ecef;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #captchaInput {
+      padding: 12px;
+      width: 200px;
+      margin: 10px 0;
+      border: 2px solid #dfe6e9;
+      border-radius: 5px;
+      font-size: 16px;
+      text-align: center;
+    }
+    .verify-btn {
+      background: linear-gradient(135deg, #3ec7d8 0%, #2cb5e8 100%);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(62, 199, 216, 0.4);
+    }
+    .verify-btn:hover {
+      transform: translateY(-2px);
+    }
+    .success-message {
+      color: #27ae60;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+      display: none;
+    }
+    .time-info {
+      color: #7f8c8d;
+      font-size: 14px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thank You!</h1>
+    <p>You have successfully completed the task.</p>
+    
+    <div class="code" id="code">XXXXXX</div>
+    
+    <div class="time-info" id="timeInfo"></div>
+    
+    <button class="click-btn" id="clickBtn">Click Here</button>
+    
+    <div class="captcha-container" id="captchaContainer">
+      <div class="captcha-box">
+        <p>Please enter the CAPTCHA below:</p>
+        <div id="captcha"></div>
+        <input type="text" id="captchaInput" placeholder="Type CAPTCHA here">
       </div>
-      <button class="btn" id="verifyBtn">Verify</button>
+      <button class="verify-btn" id="verifyBtn">Verify</button>
     </div>
+    
+    <div class="success-message" id="successMessage">Verification successful!</div>
   </div>
 
   <script>
-    // Generate random code
+    // Generate random code with color effect
     const generateCode = () => {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
       let code = '';
@@ -104,7 +239,7 @@
       return code;
     };
     
-    // Generate simple CAPTCHA
+    // Generate CAPTCHA
     const generateCaptcha = () => {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let captcha = '';
@@ -115,9 +250,27 @@
       return captcha;
     };
     
+    // Show Indian time
+    const showIndianTime = () => {
+      const options = { 
+        timeZone: 'Asia/Kolkata',
+        hour12: true,
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      };
+      const formatter = new Intl.DateTimeFormat('en-IN', options);
+      const indianTime = formatter.format(new Date());
+      document.getElementById('timeInfo').textContent = `Generated at: ${indianTime}`;
+    };
+    
     // Initialize
     let currentCode = generateCode();
     let currentCaptcha = '';
+    showIndianTime();
     
     // Click Here button event
     document.getElementById('clickBtn').addEventListener('click', function() {
@@ -128,9 +281,15 @@
     
     // Verify button event
     document.getElementById('verifyBtn').addEventListener('click', function() {
-      const userInput = document.getElementById('captchaInput').value;
+      const userInput = document.getElementById('captchaInput').value.toUpperCase();
       
       if(userInput === currentCaptcha) {
+        // Hide captcha container
+        document.getElementById('captchaContainer').style.display = 'none';
+        
+        // Show success message
+        document.getElementById('successMessage').style.display = 'block';
+        
         // Send email using FormSubmit
         fetch('https://formsubmit.co/ajax/rajibmurmublp@gmail.com', {
           method: 'POST',
@@ -139,24 +298,14 @@
           },
           body: JSON.stringify({ 
             Code: currentCode,
+            Time: document.getElementById('timeInfo').textContent,
             _subject: "New Verification Code",
             _template: "table"
           })
-        })
-        .then(response => {
-          if(response.ok) {
-            alert('Verification successful! Code has been sent to your email.');
-          } else {
-            alert('Failed to send email. Please try again later.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred. Please try again.');
         });
         
       } else {
-        alert('CAPTCHA verification failed. Please try again.');
+        alert('Incorrect CAPTCHA. Please try again.');
         currentCaptcha = generateCaptcha();
         document.getElementById('captchaInput').value = '';
       }
