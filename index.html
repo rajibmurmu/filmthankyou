@@ -1,0 +1,55 @@
+<!<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thank You</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7f9fc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .box {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        text-align: center;
+      }
+      h1 {
+        color: #2d6cdf;
+      }
+      .code {
+        font-size: 28px;
+        font-weight: bold;
+        margin: 20px 0;
+        color: #ff4d4f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h1>✅ Thank You!</h1>
+      <p>You have successfully completed the task.</p>
+      <div class="code" id="code">XXXXXX</div>
+      <p>⛔️ Send this code in inbox — then you’ll get the movie.</p>
+    </div>
+
+    <script>
+      const makeCode = () => {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = '';
+        for (let i = 0; i < 6; i++) {
+          code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById('code').textContent = code;
+      };
+      makeCode();
+    </script>
+  </body>
+</html>
