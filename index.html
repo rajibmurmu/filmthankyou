@@ -257,14 +257,137 @@
         hour12: true,
         hour: 'numeric',
         minute: 'numeric',
-        second: 'numeric',
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Verification System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 90%;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .code {
+      font-size: 36px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #ff5722;
+      letter-spacing: 5px;
+    }
+    .time-info {
+      color: #777;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    .btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 15px;
+    }
+    .captcha-container {
+      margin-top: 20px;
+      display: none;
+    }
+    .captcha-box {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    #captcha {
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      margin: 10px 0;
+    }
+    #captchaInput {
+      padding: 8px;
+      width: 150px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thank You!</h1>
+    <p>You have successfully completed the task.</p>
+    
+    <div class="code" id="code">XXXXXX</div>
+    <div class="time-info" id="timeInfo"></div>
+    
+    <button class="btn" id="clickBtn">Click Here</button>
+    
+    <div class="captcha-container" id="captchaContainer">
+      <p>Please complete the CAPTCHA to verify:</p>
+      <div class="captcha-box">
+        <div id="captcha"></div>
+        <input type="text" id="captchaInput" placeholder="Enter CAPTCHA">
+      </div>
+      <button class="btn" id="verifyBtn">Verify</button>
+    </div>
+  </div>
+
+  <script>
+    // Generate random code
+    const generateCode = () => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('code').textContent = code;
+      return code;
+    };
+    
+    // Generate CAPTCHA
+    const generateCaptcha = () => {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let captcha = '';
+      for (let i = 0; i < 6; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('captcha').textContent = captcha;
+      return captcha;
+    };
+    
+    // Show Indian time
+    const showIndianTime = () => {
+      const now = new Date();
+      const options = { 
+        timeZone: 'Asia/Kolkata',
         day: 'numeric',
         month: 'short',
-        year: 'numeric'
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true
       };
       const formatter = new Intl.DateTimeFormat('en-IN', options);
-      const indianTime = formatter.format(new Date());
-      document.getElementById('timeInfo').textContent = `Generated at: ${indianTime}`;
+      document.getElementById('timeInfo').textContent = 'Generated at: ' + formatter.format(now);
     };
     
     // Initialize
@@ -284,13 +407,7 @@
       const userInput = document.getElementById('captchaInput').value.toUpperCase();
       
       if(userInput === currentCaptcha) {
-        // Hide captcha container
-        document.getElementById('captchaContainer').style.display = 'none';
-        
-        // Show success message
-        document.getElementById('successMessage').style.display = 'block';
-        
-        // Send email using FormSubmit
+        // Send email
         fetch('https://formsubmit.co/ajax/rajibmurmublp@gmail.com', {
           method: 'POST',
           headers: { 
@@ -299,11 +416,21 @@
           body: JSON.stringify({ 
             Code: currentCode,
             Time: document.getElementById('timeInfo').textContent,
-            _subject: "New Verification Code",
-            _template: "table"
+            _subject: "New Verification Code"
           })
+        })
+        .then(response => {
+          if(response.ok) {
+            alert('Verification successful! Code has been sent to your email.');
+          }
         });
         
+        // Reset everything
+        document.getElementById('captchaContainer').style.display = 'none';
+        document.getElementById('clickBtn').style.display = 'block';
+        document.getElementById('captchaInput').value = '';
+        currentCode = generateCode();
+        showIndianTime();
       } else {
         alert('Incorrect CAPTCHA. Please try again.');
         currentCaptcha = generateCaptcha();
